@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Input, OnInit,  Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/map';
@@ -7,6 +7,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/fromPromise';
 
+
 @Component({
   selector: 'gs-search',
   templateUrl: './search.component.html',
@@ -14,39 +15,41 @@ import 'rxjs/add/observable/fromPromise';
 })
 export class SearchComponent implements OnInit{
 
-@ViewChild('sinput', { read: ViewContainerRef})
-public sinput: ViewContainerRef;
+  @ViewChild('sinput', { read: ViewContainerRef})
+  public sinput: ViewContainerRef;
 
-private inputElem: HTMLInputElement;
+  @Input()
+  public searchResults: RedditSearchResItemData[];
 
-@Output()
-public search(value): void {
-  console.dir('sinput: ' + this.inputElem.value);
-}
 
-public ngOnInit(): void {
-  this.inputElem = this.sinput.element.nativeElement;
+  private inputElem: HTMLInputElement;
 
-  this.subscribeOnInput();
-}
+  @Output()
+  public search(value): void {
+    console.dir('sinput: ' + this.inputElem.value);
+  }
 
-private subscribeOnInput(): void {
-  Observable.fromEvent(this.inputElem, 'input')
-  .debounceTime(300)
-  .map((event: KeyboardEvent) => (event.target as HTMLInputElement).value)
-  // .do((searchTerm: string) => {
-  //   console.log(searchTerm);
-  // })
-  .switchMap((searchTerm: string) => {
-    return Observable
-      //.fromPromise(fetch(`https://api.github.com/search/repositories?q=${searchTerm}`)
-      .fromPromise(fetch(`https://www.reddit.com/r/gifs/search.json?q=${searchTerm}&sort=new`)
-      //https://www.reddit.com/r/gifs/search.json?q=ferrari&sort=new
-        .then((res: Response) => res.json()));
-  })
-  .map((res: any) => res.data.children)
-  .subscribe((items//: RedditSearchResItem[]
-  ) => console.dir(items));
-}//ferrari
+  public ngOnInit(): void {
+    this.inputElem = this.sinput.element.nativeElement;
 
+    this.subscribeOnInput();
+  }
+
+  private subscribeOnInput(): void {
+    Observable.fromEvent(this.inputElem, 'input')
+    .debounceTime(300)
+    .map((event: KeyboardEvent) => (event.target as HTMLInputElement).value)
+    .switchMap((searchTerm: string) => {
+      return Observable
+        .fromPromise(fetch(`https://www.reddit.com/search.json?q=${searchTerm}&sort=new`)
+        //.fromPromise(fetch(`https://www.reddit.com/r/gifs/search.json?q=${searchTerm}&sort=new`)
+          .then((res: Response) => res.json()));
+          //ferrari
+    })
+    .map((res: any) => res.data ? res.data.children : [])
+    .subscribe((items: RedditSearchResItem[]) => {
+      console.dir(items);
+      this.searchResults = items.map((item: RedditSearchResItem) => item.data);
+    });
+  }
 }

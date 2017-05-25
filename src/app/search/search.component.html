@@ -1,4 +1,18 @@
 <div class="container">
-  <input class="form-control" type="text"
+  <input class="form-control" type="text" placeholder="Поиск по www.reddit.com"
     (input)="search(sinput.value)" #sinput>
+  <div class="search-result-container">
+    <div class="search-result-item" *ngFor="let item of searchResults">
+      <a class="result-title" href="{{item.url}}">{{item.title}}</a>
+      <img *ngIf="item.thumbnail?.length > 0
+          && item.thumbnail !== 'self'
+          && item.thumbnail !== 'default'
+          && item.thumbnail !== 'nsfw'
+          && item.thumbnail !== 'image'"
+          src="{{item.thumbnail}}" alt="{{item.title}}"><br>
+      <i>{{item.author}}</i><br>
+      {{item.selftext}}<br>
+      <!--{{item.subreddit_name_prefixed}}<br>-->
+    </div>
+  </div>
 </div>
