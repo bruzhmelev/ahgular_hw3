@@ -6,6 +6,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './search/search.component';
 
+import { HttpService } from './common/services/http.service';
+
 //TODO
 //Вынести сервис запроса к api reddit
 //Вынести URL api и т.п. в конфиг файл
@@ -20,6 +22,9 @@ import { SearchComponent } from './search/search.component';
   imports: [
     BrowserModule,
     HttpModule
+  ],
+  providers: [
+    HttpService,
   ],
   bootstrap: [AppComponent]
 })
