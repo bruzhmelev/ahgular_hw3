@@ -13,6 +13,7 @@ import { HttpService } from './common/services/http.service';
 //Вынести URL api и т.п. в конфиг файл
 //? Вынести копмпоненту результат
 //Переделать с @ViewChild - на метод-события с передачей в управляемую последовательность
+//Вынести условия ngIf из шаблона в компонент
 
 @NgModule({
   declarations: [
