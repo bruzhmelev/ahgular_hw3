@@ -14,7 +14,5 @@ type RedditSearchResItemData = {
   url: string,
   selftext_html: string,
   selftext: string
-  // preview?: Preview, //images[] - sorce.url
-  // subreddit: string
 };
 

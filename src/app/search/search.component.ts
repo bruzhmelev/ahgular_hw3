@@ -44,7 +44,6 @@ export class SearchComponent implements OnInit{
         .fromPromise(fetch(`https://www.reddit.com/search.json?q=${searchTerm}&sort=new`)
         //.fromPromise(fetch(`https://www.reddit.com/r/gifs/search.json?q=${searchTerm}&sort=new`)
           .then((res: Response) => res.json()));
-          //ferrari
     })
     .map((res: any) => res.data ? res.data.children : [])
     .subscribe((items: RedditSearchResItem[]) => {
